@@ -1,0 +1,5 @@
+aiogram==3.3.0
+aiohttp==3.9.1
+yt-dlp>=2025.10.22
+certifi>=2023.7.22
+beautifulsoup4==4.12.2
