@@ -150,6 +150,8 @@ async def download_track(track):
 @dp.message(CommandStart())
 async def cmd_start(message: Message):
     """Обработчик команды /start"""
+    logger.info(f"Получена команда /start от пользователя {message.from_user.id}")
+    
     user = message.from_user
     is_new = add_user(
         user_id=user.id,
@@ -160,17 +162,21 @@ async def cmd_start(message: Message):
     if is_new:
         logger.info(f"Новый пользователь: {user.id} (@{user.username}) - {user.first_name}")
     
-    await message.answer(
-        "🎵 <b>Привет! Я @DownloaderSSMusicBot</b>\n\n"
-        "💫 Я помогу тебе найти и скачать любую музыку\n\n"
-        "✨ Просто отправь мне название песни или исполнителя!\n\n"
-        "🔍 <b>Источники музыки:</b>\n"
-        "🎵 MP3WR - российский сайт\n"
-        "🎶 Sefon - альтернативный источник\n"
-        "📺 YouTube - резервный источник\n\n"
-        "🌐 <i>Работаю на Koyeb хостинге</i>",
-        parse_mode="HTML"
-    )
+    try:
+        await message.answer(
+            "🎵 <b>Привет! Я @DownloaderSSMusicBot</b>\n\n"
+            "💫 Я помогу тебе найти и скачать любую музыку\n\n"
+            "✨ Просто отправь мне название песни или исполнителя!\n\n"
+            "🔍 <b>Источники музыки:</b>\n"
+            "🎵 MP3WR - российский сайт\n"
+            "🎶 Sefon - альтернативный источник\n"
+            "📺 YouTube - резервный источник\n\n"
+            "🌐 <i>Работаю на Koyeb хостинге</i>",
+            parse_mode="HTML"
+        )
+        logger.info(f"Ответ на /start отправлен пользователю {message.from_user.id}")
+    except Exception as e:
+        logger.error(f"Ошибка отправки ответа на /start: {e}")
 
 
 @dp.message(Command('stats'))
@@ -463,6 +469,17 @@ async def callback_download(callback: CallbackQuery, state: FSMContext):
             parse_mode="HTML"
         )
         await state.clear()
+
+
+# Тестовый обработчик для отладки
+@dp.message()
+async def debug_handler(message: Message):
+    """Обработчик для отладки - ловит все необработанные сообщения"""
+    logger.info(f"🐛 DEBUG: Получено сообщение '{message.text}' от {message.from_user.id}")
+    if message.text and message.text.startswith('/'):
+        await message.answer(f"⚠️ Команда '{message.text}' не распознана")
+    else:
+        await message.answer("🔍 Для поиска музыки просто напишите название песни!")
 
 
 # HTTP endpoints
