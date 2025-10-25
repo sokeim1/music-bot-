@@ -35,10 +35,7 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = "8353650126:AAGvR3EoPXWeyCMkDIB8gDR7NwXx1REMbwQ"
 
 # Инициализация бота и диспетчера
-bot = Bot(
-    token=BOT_TOKEN,
-    default_request_timeout=60  # Увеличиваем таймаут до 60 секунд
-)
+bot = Bot(token=BOT_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
